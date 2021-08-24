@@ -33,15 +33,29 @@ def draw_pieces(surface: pygame.Surface, board):
     '''
     surface.blit(IMAGES["bR"], (10, 10))    # user surface.blit to draw images
 
-def map_coord_to_square(x, y):
+
+# use ENUMs for mapping
+def map_coord_to_index(x, y):
     '''Maps mouse click coordinates to chess squares
     '''
-    row = x // SQUARE_SIZE
-    col = y // SQUARE_SIZE
+    col = (x // SQUARE_SIZE)
+    row = (DIMENTION - (y // SQUARE_SIZE)) - 1
 
-    print(row)
-    print(col)
+    square = row * 8 + col
+    # print(row)
+    # print(col)
+    print(square)
+    return square
 
+def map_index_to_coord(index):
+    '''Maps the square index to display location for piece
+    '''
+    row = index // 8
+    col = index % 8
+
+    x = col * SQUARE_SIZE
+    y = (DIMENTION - (row + 1))
+    return (x, y)
 
 def main():
 
@@ -64,7 +78,7 @@ def main():
                 running = False
             elif (event.type == pygame.MOUSEBUTTONDOWN):
                 pos = pygame.mouse.get_pos()
-                map_coord_to_square(pos[0], pos[1])
+                map_coord_to_index(pos[0], pos[1])
 
         draw_board(screen)
         draw_pieces(screen, None)
