@@ -1,6 +1,8 @@
 import os
 import pygame
 
+import chess
+
 
 IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), "images")
 WIDTH = HEIGHT = 512
@@ -28,10 +30,13 @@ def draw_board(surface: pygame.Surface):
             color = colors[((row + col) % 2)]
             pygame.draw.rect(surface, color, pygame.Rect(col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
-def draw_pieces(surface: pygame.Surface, board):
+def draw_pieces(surface: pygame.Surface, board: chess.Board):
     '''Draws the pieces from a given board state
     '''
-    surface.blit(IMAGES["bR"], (10, 10))    # user surface.blit to draw images
+    piece_map = board.piece_map()
+    for index, piece in piece_map.items():
+        x, y = map_index_to_coord(index)
+        surface.blit(IMAGES["bR"], (x, y))    # user surface.blit to draw images
 
 
 # use ENUMs for mapping
@@ -54,8 +59,8 @@ def map_index_to_coord(index):
     col = index % 8
 
     x = col * SQUARE_SIZE
-    y = (DIMENTION - (row + 1))
-    return (x, y)
+    y = (DIMENTION - (row + 1)) * SQUARE_SIZE
+    return x, y
 
 def main():
 
@@ -70,6 +75,7 @@ def main():
 
     running = True
 
+    main_board = chess.Board()
     while running:
 
         for event in pygame.event.get():
@@ -81,13 +87,14 @@ def main():
                 map_coord_to_index(pos[0], pos[1])
 
         draw_board(screen)
-        draw_pieces(screen, None)
+        draw_pieces(screen, main_board)
         pygame.display.flip()
 
 
 if (__name__ == "__main__"):
     main()
-    # import chess
     # board = chess.Board()
     # print(board)
-    # print(board.piece_map())
+    # piece_map = board.piece_map()
+    # print(piece_map)
+    # print(type(piece_map))
