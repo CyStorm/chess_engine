@@ -3,6 +3,7 @@ import pygame
 
 import chess
 
+from value_maps import SYMBOL_MAP
 
 IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), "images")
 WIDTH = HEIGHT = 512
@@ -24,7 +25,6 @@ def draw_board(surface: pygame.Surface):
     '''Draws the empty chess board with given colors
     '''
     colors = [pygame.Color("white"), pygame.Color("gray")]
-
     for row in range(DIMENTION):
         for col in range(DIMENTION):
             color = colors[((row + col) % 2)]
@@ -36,8 +36,13 @@ def draw_pieces(surface: pygame.Surface, board: chess.Board):
     piece_map = board.piece_map()
     for index, piece in piece_map.items():
         x, y = map_index_to_coord(index)
-        surface.blit(IMAGES["bR"], (x, y))    # user surface.blit to draw images
+        image = map_piece_to_image(piece.symbol())
+        surface.blit(IMAGES[image], (x, y))    # user surface.blit to draw images
 
+def map_piece_to_image(piece_symbol):
+    '''Maps the piece symbol to the image to be displayed
+    '''
+    return SYMBOL_MAP[piece_symbol]
 
 # use ENUMs for mapping
 def map_coord_to_index(x, y):
@@ -47,9 +52,6 @@ def map_coord_to_index(x, y):
     row = (DIMENTION - (y // SQUARE_SIZE)) - 1
 
     square = row * 8 + col
-    # print(row)
-    # print(col)
-    print(square)
     return square
 
 def map_index_to_coord(index):
@@ -61,6 +63,12 @@ def map_index_to_coord(index):
     x = col * SQUARE_SIZE
     y = (DIMENTION - (row + 1)) * SQUARE_SIZE
     return x, y
+
+def move_piece(start_square, end_square):
+    '''Moves piece from starting square to ending square
+    TODO might no belong here
+    '''
+    pass
 
 def main():
 
@@ -93,8 +101,3 @@ def main():
 
 if (__name__ == "__main__"):
     main()
-    # board = chess.Board()
-    # print(board)
-    # piece_map = board.piece_map()
-    # print(piece_map)
-    # print(type(piece_map))

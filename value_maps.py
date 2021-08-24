@@ -12,3 +12,21 @@ class letter_column(Enum):
     F = 6
     G = 7
     H = 8
+
+
+SYMBOL_MAP = {
+    # lower case is black
+    "p": "bP",
+    "k": "bK",
+    "q": "bQ",
+    "r": "bR",
+    "n": "bN",
+    "b": "bB",
+    # Upper case is white
+    "P": "wP",
+    "K": "wK",
+    "Q": "wQ",
+    "R": "wR",
+    "N": "wN",
+    "B": "wB"
+}
