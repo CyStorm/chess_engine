@@ -40,6 +40,20 @@ def draw_pieces(surface: pygame.Surface, board: chess.Board):
         image = map_piece_to_image(piece.symbol())
         surface.blit(IMAGES[image], (x, y))    # user surface.blit to draw images
 
+def draw_highlighted_squares(surface: pygame.Surface, board: chess.Board, held_piece_square: int):
+    '''Draws the highlighted squares if in check or holding a piece
+    '''
+    if (held_piece_square is not None):
+        for move in board.legal_moves:
+            if (move.from_square == held_piece_square):
+                color = pygame.Color("yellow")
+                x, y = map_index_to_coord(move.to_square)
+                pygame.draw.rect(surface, color, pygame.Rect(x, y, SQUARE_SIZE, SQUARE_SIZE))
+
+    if (board.is_check()):
+        # TODO handle if in check
+        pass
+
 def map_piece_to_image(piece_symbol):
     '''Maps the piece symbol to the image to be displayed
     '''
@@ -77,7 +91,9 @@ def main():
     pygame.display.set_caption("chad is op")
 
     running = True
-    main_game = ChessGame()
+    game = ChessGame()
+
+    held_piece_square = None
 
     while running:
 
@@ -87,10 +103,33 @@ def main():
                 running = False
             elif (event.type == pygame.MOUSEBUTTONDOWN):
                 pos = pygame.mouse.get_pos()
-                map_coord_to_index(pos[0], pos[1])
+                x = pos[0]
+                y = pos[1]
+                clicked_square = map_coord_to_index(x, y)
+                piece_map = game.board.piece_map()
+
+                if (clicked_square in piece_map.keys()):
+                    piece = piece_map[clicked_square]
+                else:
+                    piece = None
+
+                if (held_piece_square is not None):
+                    # holding a prievous piece no matter if there is a piece or not do the move
+                    # TODO need to handle promotion
+                    success = game.move_piece(held_piece_square, clicked_square)
+
+                    if (not success and piece is not None):
+                        held_piece_square = clicked_square
+                    else:
+                        held_piece_square = None
+
+                elif (not held_piece_square and piece is not None):
+                    # case of not holding any piece, and picks up this piece
+                    held_piece_square = clicked_square
 
         draw_board(screen)
-        draw_pieces(screen, main_game.board)
+        draw_highlighted_squares(screen, game.board, held_piece_square)
+        draw_pieces(screen, game.board)
         pygame.display.flip()
 
 

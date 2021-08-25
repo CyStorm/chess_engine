@@ -14,12 +14,14 @@ class ChessGame():
         move = chess.Move(start_square, end_square, promotion)
         if (move in self.board.legal_moves):
             self.board.push(move)
+            return True
         else:
-            print("Not legal")
+            return False
 
 if (__name__ == "__main__"):
     game = ChessGame()
     print(game.board)
+    print(game.board.piece_map())
     while (True):
         start = int(input("start "))
         end = int(input("end "))
