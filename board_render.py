@@ -95,6 +95,11 @@ def main():
 
     held_piece_square = None
 
+    draw_board(screen)
+    draw_highlighted_squares(screen, game.board, held_piece_square)
+    draw_pieces(screen, game.board)
+    pygame.display.flip()
+
     while running:
 
         for event in pygame.event.get():
@@ -127,10 +132,10 @@ def main():
                     # case of not holding any piece, and picks up this piece
                     held_piece_square = clicked_square
 
-        draw_board(screen)
-        draw_highlighted_squares(screen, game.board, held_piece_square)
-        draw_pieces(screen, game.board)
-        pygame.display.flip()
+                draw_board(screen)
+                draw_highlighted_squares(screen, game.board, held_piece_square)
+                draw_pieces(screen, game.board)
+                pygame.display.flip()
 
 
 if (__name__ == "__main__"):
