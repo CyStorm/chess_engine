@@ -3,6 +3,7 @@ import pygame
 
 import chess
 
+from chess_game import ChessGame
 from value_maps import SYMBOL_MAP
 
 IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), "images")
@@ -64,12 +65,6 @@ def map_index_to_coord(index):
     y = (DIMENTION - (row + 1)) * SQUARE_SIZE
     return x, y
 
-def move_piece(start_square, end_square):
-    '''Moves piece from starting square to ending square
-    TODO might no belong here
-    '''
-    pass
-
 def main():
 
     load_images()
@@ -82,8 +77,8 @@ def main():
     pygame.display.set_caption("chad is op")
 
     running = True
+    main_game = ChessGame()
 
-    main_board = chess.Board()
     while running:
 
         for event in pygame.event.get():
@@ -95,7 +90,7 @@ def main():
                 map_coord_to_index(pos[0], pos[1])
 
         draw_board(screen)
-        draw_pieces(screen, main_board)
+        draw_pieces(screen, main_game.board)
         pygame.display.flip()
 
 
