@@ -4,7 +4,7 @@ import pygame
 import chess
 
 from chess_game import ChessGame
-from value_maps import SYMBOL_MAP
+from value_maps import SYMBOL_MAP, PROMOTION_SQUARES
 
 IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), "images")
 WIDTH = HEIGHT = 512
@@ -53,6 +53,12 @@ def draw_highlighted_squares(surface: pygame.Surface, board: chess.Board, held_p
     if (board.is_check()):
         # TODO handle if in check
         pass
+
+def draw_promotion_graphic(surface: pygame.Surface):
+    '''Draws the promotion graphic when pawns promote
+    '''
+    pass
+
 
 def map_piece_to_image(piece_symbol):
     '''Maps the piece symbol to the image to be displayed
@@ -120,8 +126,14 @@ def main():
 
                 if (held_piece_square is not None):
                     # holding a prievous piece no matter if there is a piece or not do the move
-                    # TODO need to handle promotion
-                    success = game.move_piece(held_piece_square, clicked_square)
+                    promotion = None
+                    # TODO need to handle promotion, Currently promotion Auto Queens
+                    held_piece = piece_map[held_piece_square].symbol()
+                    if (held_piece == "P" or held_piece == "p"):
+                        if (clicked_square in PROMOTION_SQUARES[held_piece]):
+                            promotion = chess.PieceType(5)      # Queen is 5 from documentation
+
+                    success = game.move_piece(held_piece_square, clicked_square, promotion)
 
                     if (not success and piece is not None):
                         held_piece_square = clicked_square
