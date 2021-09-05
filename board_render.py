@@ -51,7 +51,7 @@ def draw_highlighted_squares(surface: pygame.Surface, board: chess.Board, held_p
                 pygame.draw.rect(surface, color, pygame.Rect(x, y, SQUARE_SIZE, SQUARE_SIZE))
 
     if (board.is_check()):
-        # TODO handle if in check
+        # TODO handle if in check display a red square
         pass
 
 def draw_promotion_graphic(surface: pygame.Surface):
