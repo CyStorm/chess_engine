@@ -1,0 +1,2 @@
+from value_maps import PROMOTION_SQUARES
+print(PROMOTION_SQUARES)

@@ -4,8 +4,10 @@ import pygame
 import chess
 
 from chess_game import ChessGame
-from value_maps import SYMBOL_MAP, PROMOTION_SQUARES
+from value_maps import SYMBOL_MAP
+from random_move import RandomMove
 
+# TODO use env variables and combine to value maps
 IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), "images")
 WIDTH = HEIGHT = 512
 DIMENTION = 8
@@ -59,7 +61,6 @@ def draw_promotion_graphic(surface: pygame.Surface):
     '''
     pass
 
-
 def map_piece_to_image(piece_symbol):
     '''Maps the piece symbol to the image to be displayed
     '''
@@ -97,12 +98,16 @@ def main():
     pygame.display.set_caption("chad is op")
 
     running = True
-    game = ChessGame()
 
-    held_piece_square = None
+    engine = RandomMove()
+    # e2 = RandomMove()
+    game = ChessGame("player", engine)
+    engine.side = chess.BLACK
+    engine.game = game
+    # e2.side = chess.WHITE
+    # e2.game = game
 
     draw_board(screen)
-    draw_highlighted_squares(screen, game.board, held_piece_square)
     draw_pieces(screen, game.board)
     pygame.display.flip()
 
@@ -116,39 +121,15 @@ def main():
                 pos = pygame.mouse.get_pos()
                 x = pos[0]
                 y = pos[1]
-                clicked_square = map_coord_to_index(x, y)
-                piece_map = game.board.piece_map()
+                game.handle_player_mouse_event(x, y)
 
-                if (clicked_square in piece_map.keys()):
-                    piece = piece_map[clicked_square]
-                else:
-                    piece = None
-
-                if (held_piece_square is not None):
-                    # holding a prievous piece no matter if there is a piece or not do the move
-                    promotion = None
-                    # TODO need to handle promotion, Currently promotion Auto Queens
-                    held_piece = piece_map[held_piece_square].symbol()
-                    if (held_piece == "P" or held_piece == "p"):
-                        if (clicked_square in PROMOTION_SQUARES[held_piece]):
-                            promotion = chess.PieceType(5)      # Queen is 5 from documentation
-
-                    success = game.move_piece(held_piece_square, clicked_square, promotion)
-
-                    if (not success and piece is not None):
-                        held_piece_square = clicked_square
-                    else:
-                        held_piece_square = None
-
-                elif (not held_piece_square and piece is not None):
-                    # case of not holding any piece, and picks up this piece
-                    held_piece_square = clicked_square
-
-                draw_board(screen)
-                draw_highlighted_squares(screen, game.board, held_piece_square)
-                draw_pieces(screen, game.board)
-                pygame.display.flip()
-
+            elif (event.type == pygame.KEYDOWN):
+                if (event.key == pygame.K_a):
+                    game.play_engine_moves()
+        draw_board(screen)
+        draw_highlighted_squares(screen, game.board, game.held_piece_square)
+        draw_pieces(screen, game.board)
+        pygame.display.flip()
 
 if (__name__ == "__main__"):
     main()
