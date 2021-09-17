@@ -47,12 +47,17 @@ def draw_highlighted_squares(surface: pygame.Surface, board: chess.Board, held_p
                 pygame.draw.rect(surface, color, pygame.Rect(x, y, SQUARE_SIZE, SQUARE_SIZE))
 
     if (board.is_check()):
-        # TODO handle if in check display a red square
-        pass
+        piece_map = board.piece_map()
+        for square, piece in piece_map.items():
+            if (piece.color == board.turn and piece.piece_type == chess.KING):
+                color = pygame.Color("Red")
+                x, y = map_index_to_coord(square)
+                pygame.draw.rect(surface, color, pygame.Rect(x, y, SQUARE_SIZE, SQUARE_SIZE))
 
 def draw_promotion_graphic(surface: pygame.Surface):
     '''Draws the promotion graphic when pawns promote
     '''
+    # TODO need a visual graphic for mouse input to promote
     pass
 
 def initial_setup():
