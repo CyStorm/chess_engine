@@ -55,33 +55,33 @@ def draw_promotion_graphic(surface: pygame.Surface):
     '''
     pass
 
-def main():
-
+def initial_setup():
+    '''Runs when the program first starts, loads images and initializes pygame
+    '''
     load_images()
-
     pygame.init()
-
     logo = IMAGES["wP"]
     screen = pygame.display.set_mode((SCREEN_PIXEL_SIZE, SCREEN_PIXEL_SIZE))
     pygame.display.set_icon(logo)
     pygame.display.set_caption("chad is op")
+    return screen
 
-    running = True
-
-    engine = RandomMove(None, None)
-    e2 = RandomMove(None, None)
-    game = ChessGame(e2, engine)
-    engine.side = chess.BLACK
-    engine.game = game
-    e2.side = chess.WHITE
-    e2.game = game
-
+def update_display(screen, game):
+    '''Updates the display screen with game info
+    '''
     draw_board(screen)
+    draw_highlighted_squares(screen, game.board, game.held_piece_square)
     draw_pieces(screen, game.board)
     pygame.display.flip()
 
+def run_pygame_display(game):
+    '''Single function to have the pygame display function for visually displaying the game
+    calls all the setup as well
+    '''
+    screen = initial_setup()
+    running = True
+    update_display(screen, game)
     while running:
-
         for event in pygame.event.get():
             if (event.type == pygame.QUIT):
                 print("Exited")
@@ -95,10 +95,17 @@ def main():
             elif (event.type == pygame.KEYDOWN):
                 if (event.key == pygame.K_a):
                     game.play_engine_moves()
-        draw_board(screen)
-        draw_highlighted_squares(screen, game.board, game.held_piece_square)
-        draw_pieces(screen, game.board)
-        pygame.display.flip()
+        update_display(screen, game)
+
 
 if (__name__ == "__main__"):
-    main()
+    '''Debug code for this file
+    '''
+    engine = RandomMove(None, None)
+    e2 = RandomMove(None, None)
+    game = ChessGame(e2, engine)
+    engine.side = chess.BLACK
+    engine.game = game
+    e2.side = chess.WHITE
+    e2.game = game
+    run_pygame_display(game)
