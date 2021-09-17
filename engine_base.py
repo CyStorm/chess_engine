@@ -3,7 +3,7 @@ from chess_game import ChessGame
 
 
 class EngineBase():
-    def __init__(self, game=None, side=None):
+    def __init__(self, game: ChessGame, side: chess.Color):
         self.game = game
         self.side = side
 

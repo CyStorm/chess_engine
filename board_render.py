@@ -4,15 +4,9 @@ import pygame
 import chess
 
 from chess_game import ChessGame
-from value_maps import SYMBOL_MAP
+from value_maps import map_coord_to_index, map_index_to_coord, map_piece_to_image, DIMENTION, SCREEN_PIXEL_SIZE, SQUARE_SIZE, IMAGES_FOLDER
 from random_move import RandomMove
 
-# TODO use env variables and combine to value maps
-IMAGES_FOLDER = os.path.join(os.path.dirname(__file__), "images")
-WIDTH = HEIGHT = 512
-DIMENTION = 8
-MAX_FPS = 15
-SQUARE_SIZE = HEIGHT // DIMENTION
 
 IMAGES = {}
 
@@ -61,31 +55,6 @@ def draw_promotion_graphic(surface: pygame.Surface):
     '''
     pass
 
-def map_piece_to_image(piece_symbol):
-    '''Maps the piece symbol to the image to be displayed
-    '''
-    return SYMBOL_MAP[piece_symbol]
-
-# use ENUMs for mapping
-def map_coord_to_index(x, y):
-    '''Maps mouse click coordinates to chess squares
-    '''
-    col = (x // SQUARE_SIZE)
-    row = (DIMENTION - (y // SQUARE_SIZE)) - 1
-
-    square = row * 8 + col
-    return square
-
-def map_index_to_coord(index):
-    '''Maps the square index to display location for piece
-    '''
-    row = index // 8
-    col = index % 8
-
-    x = col * SQUARE_SIZE
-    y = (DIMENTION - (row + 1)) * SQUARE_SIZE
-    return x, y
-
 def main():
 
     load_images()
@@ -93,19 +62,19 @@ def main():
     pygame.init()
 
     logo = IMAGES["wP"]
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_PIXEL_SIZE, SCREEN_PIXEL_SIZE))
     pygame.display.set_icon(logo)
     pygame.display.set_caption("chad is op")
 
     running = True
 
-    engine = RandomMove()
-    # e2 = RandomMove()
-    game = ChessGame("player", engine)
+    engine = RandomMove(None, None)
+    e2 = RandomMove(None, None)
+    game = ChessGame(e2, engine)
     engine.side = chess.BLACK
     engine.game = game
-    # e2.side = chess.WHITE
-    # e2.game = game
+    e2.side = chess.WHITE
+    e2.game = game
 
     draw_board(screen)
     draw_pieces(screen, game.board)
