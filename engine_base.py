@@ -26,25 +26,25 @@ class EngineBase():
             move = self.generate_next_move()
             self.game.play_move(move)
 
+    def get_material_value_from_board(self, board, side):
+        '''Get a side's material from a board, more flexiable method
+        '''
+        total = 0
+        pieces = board.board.piece_map()
+        for piece in pieces.values():
+            if (piece.color == side):
+                total += self.material_weight[piece.piece_type]
+        return total
+
     def get_self_material_value(self):
         '''Computes the numerical material values of all of our own peices
         '''
-        total = 0
-        pieces = self.game.board.piece_map()
-        for piece in pieces.values():
-            if (piece.color == self.side):
-                total += self.material_weight[piece.piece_type]
-        return total
+        return self.get_material_value_from_board(self.game.board, self.side)
 
     def get_opponent_material_value(self):
         '''Computes the numerical material values of all of opponent's peices
         '''
-        total = 0
-        pieces = self.game.board.piece_map()
-        for piece in pieces.values():
-            if (piece.color != self.side):
-                total += self.material_weight[piece.piece_type]
-        return total
+        return self.get_material_value_from_board(self.game.board, not self.side)
 
 if (__name__ == "__main__"):
     '''debug code for this file
